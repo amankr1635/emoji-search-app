@@ -27,37 +27,37 @@ const emojis = [
   { name:'red heart',emoji:'💘'},
 ];
 
-function EmojiSearch() {
-  const [searchTerm, setSearchTerm] = useState('');
+const EmojiSearch = () => {
+  const [searchText, setSearchText] = useState('');
+  const [filteredEmojis, setFilteredEmojis] = useState(emojis);
 
-  const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSearchInputChange = (event) => {
+    const newSearchText = event.target.value;
+    setSearchText(newSearchText);
+
+    const filtered = emojis.filter(({ name }) => {
+      const lowerCaseName = name.toLowerCase();
+      const lowerCaseSearchText = newSearchText.toLowerCase();
+      return lowerCaseName.includes(lowerCaseSearchText);
+    });
+
+    setFilteredEmojis(filtered);
   };
 
-  const filteredEmojis = emojis.filter(
-    (emoji) =>
-      emoji.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emoji.emoji.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <div>
-      <h2>Emjoi Search</h2>
-      <input
-        type="text"
-        placeholder="Search for an emoji..."
-        value={searchTerm}
-        onChange={handleInputChange}
-      />
-      <div className='emojis'>
-        {filteredEmojis.map((emoji, index) => (
-          <span key={index} style={{ fontSize: '2rem', margin: '0.5rem' }}>
-            {emoji.emoji}
-          </span>
+    <div className="emoji-search">
+      <h1 className="emoji-search__title">Emoji Search</h1>
+      <input className="emoji-search__input" type="text"  placeholder="Search for an emoji..." value={searchText} onChange={handleSearchInputChange} />
+      <ul className="emoji-search__list">
+        {filteredEmojis.map(({ id, emoji, name }) => (
+          <li key={id} className="emoji-search__item">
+            <span className="emoji-search__emoji">{emoji}</span>
+            <span className="emoji-search__name">{name}</span>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-}
+};
 
 export default EmojiSearch;
